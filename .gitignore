@@ -1,2 +1,4 @@
 *.sw*
 legends-tracker
+*.hi
+*.o
