@@ -18,14 +18,14 @@ writeMatch m = do
     file <- getFileHandle
     appendFile file (intercalate " " (matchString m ++ ["\n"])) 
 
-searchClass :: Class -> IO Int 
-searchClass c = do
+rateByClass:: Class -> IO Double 
+rateByClass c = do
     exists <- doesMatchesExist
     file <- getFileHandle
     content <- readFile file
     let fileLines = lines content
     if exists
-        then return $ countResults (search fileLines (show c) 3) Win
+        then return $ getRate (search fileLines (show c) 3) 
         else return 0
 
 getFileHandle = do
@@ -42,6 +42,9 @@ search contents key n = filter (\x -> key `elem` take n (words x)) contents
 -- Counts wins, losses, or draws as a @key from @contents.
 countResults :: [String] -> Result -> Int
 countResults contents key = length $ search contents (show key) 1
-{-
-countResults contents key = length $ filter (\x -> key `elem` take 1 (words x)) ss 
--}
+
+getRate :: [String] -> Double
+getRate results = (resultsToDouble results Win) / (resultsToDouble results Loss)
+
+resultsToDouble :: [String] -> Result -> Double
+resultsToDouble results kind = fromIntegral $ countResults results kind 
