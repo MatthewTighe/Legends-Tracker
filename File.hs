@@ -24,15 +24,15 @@ writeMatch m = do
     appendFile file (intercalate " " (matchString m ++ ["\n"])) 
 
 -- Get the rate of wins/losses by class.
-rateByClass  :: Class -> IO Double 
+rateByClass  :: Class -> IO ()
 rateByClass c = do
     exists <- doesMatchesExist
     file <- getFileHandle
     content <- readFile file
     let fileLines = lines content
     if exists
-        then return $ getRate (search fileLines (show c) 3) 
-        else return 0
+        then print $ getRate (search fileLines (show c) 3) 
+        else print "No matches found for that class."
 
 -- Get the file handle of the containing file.
 getFileHandle :: IO FilePath

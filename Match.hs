@@ -61,8 +61,8 @@ matchString m = [show (result m), show (myArch m), show (myClass m),
                       show (theirArch m), show (theirClass m)]
 
 -- Parse a String to a Match.
-parseInput :: String -> Match
-parseInput s = buildMatch $ map T.unpack ((map T.toLower (map T.pack (words s))))
+parseMatchInput :: String -> Match
+parseMatchInput s = buildMatch $ map T.unpack ((map T.toLower (map T.pack (words s))))
 
 -- Build a Match from its component Strings.
 buildMatch :: [String] -> Match
