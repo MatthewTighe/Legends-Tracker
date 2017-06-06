@@ -5,20 +5,26 @@ import System.Directory
 
 import Match
 
+-- Convenience method borrowed from Mark Jones, PSU professor, that came from
+-- one of his homework assignments.
 (</>)  :: FilePath -> FilePath -> FilePath
 p </> q = p ++ "/" ++ q
 
-doesMatchesExist = do
+-- Check existence of the containing file.
+doesMatchesExist :: IO Bool
+doesMatchesExist  = do
     dir <- getUserDocumentsDirectory
     exists <- doesFileExist (dir </> "Legends-Tracker/Matches")
     return exists
 
-writeMatch :: Match -> IO ()
+-- Write a match to the containing file.
+writeMatch  :: Match -> IO ()
 writeMatch m = do
     file <- getFileHandle
     appendFile file (intercalate " " (matchString m ++ ["\n"])) 
 
-rateByClass:: Class -> IO Double 
+-- Get the rate of wins/losses by class.
+rateByClass  :: Class -> IO Double 
 rateByClass c = do
     exists <- doesMatchesExist
     file <- getFileHandle
@@ -28,7 +34,9 @@ rateByClass c = do
         then return $ getRate (search fileLines (show c) 3) 
         else return 0
 
-getFileHandle = do
+-- Get the file handle of the containing file.
+getFileHandle :: IO FilePath
+getFileHandle  = do
     dir <- getUserDocumentsDirectory
     createDirectoryIfMissing False (dir </> "Legends-Tracker")
     return (dir </> "Legends-Tracker/Matches") 
@@ -43,8 +51,10 @@ search contents key n = filter (\x -> key `elem` take n (words x)) contents
 countResults :: [String] -> Result -> Int
 countResults contents key = length $ search contents (show key) 1
 
+-- Gets # wins / # losses in results, which will usually search-filtered result.
 getRate :: [String] -> Double
 getRate results = (resultsToDouble results Win) / (resultsToDouble results Loss)
 
+-- Convenience method
 resultsToDouble :: [String] -> Result -> Double
 resultsToDouble results kind = fromIntegral $ countResults results kind 
