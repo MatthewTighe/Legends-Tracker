@@ -23,3 +23,7 @@ getRate results = (resultsToDouble results Win) / (resultsToDouble results Loss)
 -- Convenience method
 resultsToDouble :: [String] -> Result -> Double
 resultsToDouble results kind = fromIntegral $ countResults results kind 
+
+-- Pure method for removing @class entries from @contents.
+resetClass'           :: [String] -> Class -> [String] 
+resetClass' contents c = filter (\x -> (show c) `notElem` take 3 (words x)) contents 

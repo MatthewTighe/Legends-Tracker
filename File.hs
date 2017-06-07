@@ -1,5 +1,6 @@
 module File where
 
+import System.IO
 import Data.List
 import System.Directory
 
@@ -54,6 +55,7 @@ rateByClassVClass me them = do
         then print $ getRate (search (search fileLines (show me) 3) (show them) 5)
         else print "No matches found."
 
+-- Delete the containing file
 resetTracking :: IO ()
 resetTracking  = do
     exists <- doesMatchesExist  
@@ -62,3 +64,13 @@ resetTracking  = do
         then removeFile file
         else return ()
     
+-- Remove all entries of a specific class from the containing file.
+resetClass  :: Class -> IO ()
+resetClass c = do
+    exists <- doesMatchesExist
+    file <- getFileHandle
+    content <- readFile file
+    let fileLines = lines content
+    if exists
+        then writeFile file $ unlines (resetClass' fileLines c)
+        else return ()

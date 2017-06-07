@@ -26,6 +26,7 @@ parse (cmd:args) | cmd == "add" = addMatch args
                  | cmd == "class" = classRate (args !! 0) 
                  | cmd == "vs" = classVClass args
                  | cmd == "reset" = resetTracking
+                 | cmd == "resetClass" = resetClass $ parseClass (args !! 0)
                  | cmd == "help" = showHelp
 
 helpMessage = [ "Usage: legends-tracker [commands ...]"
@@ -35,6 +36,7 @@ helpMessage = [ "Usage: legends-tracker [commands ...]"
               , "   class <class>:  Looks up winrate with <class>."
               , "   vs <class> <class>: Looks up winrate with first <class> against second."
               , "   reset: Resets all tracking data."
+              , "   resetClass <class>: Resets all tracking data for a specific class."
               , "   help"
               , ""
               , "<result>: one of 'win', 'loss', 'draw'"
