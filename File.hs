@@ -43,6 +43,7 @@ rateByClassVClass me them = do
     if exists
         then print $ getRate (search (search fileLines (show me) 3) (show them) 5)
         else print "No matches found."
+        else print "No matches found for that class."
 
 -- Get the file handle of the containing file.
 getFileHandle :: IO FilePath
