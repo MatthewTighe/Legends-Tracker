@@ -25,13 +25,18 @@ parse []         = showHelp
 parse (cmd:args) | cmd == "add" = addMatch args 
                  | cmd == "class" = classRate (args !! 0) 
                  | cmd == "vs" = classVClass args
+                 | cmd == "reset" = resetTracking
                  | cmd == "help" = showHelp
 
 helpMessage = [ "Usage: legends-tracker [commands ...]"
+              , ""
               , "Commands:"
-              , "add <result> <archetype> <class> <archetype> <class>:  Adds match."
-              , "classAll <class>:  Looks up winrate with <class>."
-              , "help"
+              , "   add <result> <archetype> <class> <archetype> <class>:  Adds match."
+              , "   class <class>:  Looks up winrate with <class>."
+              , "   vs <class> <class>: Looks up winrate with first <class> against second."
+              , "   reset: Resets all tracking data."
+              , "   help"
+              , ""
               , "<result>: one of 'win', 'loss', 'draw'"
               , "<archetype>: one of 'aggro', 'midrange', 'control'"
               , "<class>: one of 'archer', 'assassin', 'battlemage', 'crusader',"
@@ -39,6 +44,7 @@ helpMessage = [ "Usage: legends-tracker [commands ...]"
               , "                'warrior', 'strength', 'intelligence', 'willpower',"
               , "                'agility', 'endurance', 'neutral'"
               , "         color can be substituted for base class e.g. red == strength.'"
+              , ""
               , "NOTE: add format should be <result> <your stuff> <opponent stuff>"
               ] 
 
