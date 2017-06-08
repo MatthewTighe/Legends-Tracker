@@ -32,6 +32,17 @@ writeMatch m = do
     file <- getFileHandle
     appendFile file (intercalate " " (matchString m ++ ["\n"])) 
 
+allRates :: IO ()
+allRates  = do
+    exists <- doesMatchesExist
+    file <- getFileHandle
+    content <- readFile file
+    let fileLines = lines content
+    if exists
+        then putStrLn (allRates' fileLines)
+        else print "No matches found."
+    
+
 -- Get the rate of wins/losses by class.
 rateByClass  :: Class -> IO ()
 rateByClass c = do

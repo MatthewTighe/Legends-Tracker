@@ -40,7 +40,11 @@ data Class =  Archer
             | Agility
             | Endurance
             | Neutral
-            deriving (Show, Eq)
+            deriving (Show, Eq, Enum)
+
+-- https://stackoverflow.com/questions/44420523/can-i-build-a-list-of-strings-using-each-constructor-of-a-class#44420810
+allClasses :: [String]
+allClasses  = fmap show $ enumFrom Archer
 
 -- The typical archetypes. This could easily be extended.
 data Archetype =  Aggro

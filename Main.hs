@@ -16,6 +16,9 @@ classRate arg = do
 classVClass args = do
    rateByClassVClass (parseClass $ args !! 0) (parseClass $ args !! 1)
 
+allClassRates = do
+   allRates 
+
 main = do
     args <- getArgs
     parse args
@@ -25,6 +28,7 @@ parse []         = showHelp
 parse (cmd:args) | cmd == "add" = addMatch args 
                  | cmd == "class" = classRate (args !! 0) 
                  | cmd == "vs" = classVClass args
+                 | cmd == "all" = allClassRates
                  | cmd == "reset" = resetTracking
                  | cmd == "resetClass" = resetClass $ parseClass (args !! 0)
                  | cmd == "help" = showHelp
