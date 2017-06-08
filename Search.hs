@@ -18,23 +18,26 @@ countResults contents key = length $ search contents (show key) 1
 
 -- Gets # wins / # losses in results, which will usually be search-filtered result.
 getRate        :: [String] -> Double
-getRate results = 1 - (resultsToDouble results Win - resultsToDouble results Loss)
-                    / (resultsToDouble results Win + resultsToDouble results Loss)
+getRate results = filterMath ((resultsToDouble results Win)
+                              / (resultsToDouble results Win + resultsToDouble results Loss))
+                  where filterMath x | isNaN x = 0
+                                     | isInfinite x = 1
+                                     | otherwise = x
 
 allRates'         :: [String] -> String
 allRates' contents = unlines $ zipWith (combine)
                         allClasses
                         (map (show . getRate) (map (\x -> search contents x 3) allClasses)) 
                      where combine x y = (pad x) ++ "| " ++ y
-
-pad  :: String -> String
-pad s | length s < 13 = pad (s ++ " " )
-      | otherwise     = s
 {-
 allRates' contents = zipWith (++) allClasses (search
 allRates' contents = [y ++ " " ++ show x | y <- allClasses, x <- getRate (search contents y 3)]
 allRates' contents  = zipWith (getRate) (replicate (length allClasses) contents) allClasses 
 -}
+
+pad  :: String -> String
+pad s | length s < 13 = pad (s ++ " " )
+      | otherwise     = s
 
 -- Convenience method
 resultsToDouble             :: [String] -> Result -> Double
