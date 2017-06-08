@@ -16,16 +16,20 @@ take' n xs = if n > 3
 countResults :: [String] -> Result -> Int
 countResults contents key = length $ search contents (show key) 1
 
--- Gets # wins / # losses in results, which will usually search-filtered result.
+-- Gets # wins / # losses in results, which will usually be search-filtered result.
 getRate        :: [String] -> Double
-getRate results = 1 - ((resultsToDouble results Win) - (resultsToDouble results Loss)) /
-                      ((resultsToDouble results Win) + (resultsToDouble results Loss))
+getRate results = 1 - (resultsToDouble results Win - resultsToDouble results Loss)
+                    / (resultsToDouble results Win + resultsToDouble results Loss)
 
 allRates'         :: [String] -> String
 allRates' contents = unlines $ zipWith (combine)
                         allClasses
                         (map (show . getRate) (map (\x -> search contents x 3) allClasses)) 
-                     where combine x y = x ++ " | " ++ y
+                     where combine x y = (pad x) ++ "| " ++ y
+
+pad  :: String -> String
+pad s | length s < 13 = pad (s ++ " " )
+      | otherwise     = s
 {-
 allRates' contents = zipWith (++) allClasses (search
 allRates' contents = [y ++ " " ++ show x | y <- allClasses, x <- getRate (search contents y 3)]
