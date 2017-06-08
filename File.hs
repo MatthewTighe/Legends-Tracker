@@ -80,8 +80,8 @@ resetClass  :: Class -> IO ()
 resetClass c = do
     exists <- doesMatchesExist
     file <- getFileHandle
-    content <- readFile file
-    let fileLines = lines content
-    if exists
+    contents <- readFile file
+    let fileLines = lines contents
+    if length contents >=0 && exists
         then writeFile file $ unlines (resetClass' fileLines c)
         else return ()
