@@ -18,13 +18,14 @@ countResults contents key = length $ search contents (show key) 1
 
 -- Gets # wins / # losses in results, which will usually search-filtered result.
 getRate        :: [String] -> Double
-getRate results = (resultsToDouble results Win) / (resultsToDouble results Loss)
+getRate results = 1 - ((resultsToDouble results Win) - (resultsToDouble results Loss)) /
+                      ((resultsToDouble results Win) + (resultsToDouble results Loss))
 
 allRates'         :: [String] -> String
 allRates' contents = unlines $ zipWith (combine)
                         allClasses
                         (map (show . getRate) (map (\x -> search contents x 3) allClasses)) 
-                     where combine x y = x ++ "  | " ++ y ++ "\n"
+                     where combine x y = x ++ " | " ++ y
 {-
 allRates' contents = zipWith (++) allClasses (search
 allRates' contents = [y ++ " " ++ show x | y <- allClasses, x <- getRate (search contents y 3)]
