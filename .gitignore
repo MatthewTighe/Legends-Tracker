@@ -2,3 +2,4 @@
 legends-tracker
 *.hi
 *.o
+output/**

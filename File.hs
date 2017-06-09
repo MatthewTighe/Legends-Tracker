@@ -19,23 +19,41 @@ doesMatchesExist  = do
     exists <- doesFileExist (dir </> "Legends-Tracker/Matches")
     return exists
 
--- Get the file handle of the containing file.
-getFileHandle :: IO FilePath
-getFileHandle  = do
+-- Get the file handle of the tracking file.
+getMatchFileHandle :: IO FilePath
+getMatchFileHandle  = do
     dir <- getUserDocumentsDirectory
     createDirectoryIfMissing False (dir </> "Legends-Tracker")
     return (dir </> "Legends-Tracker/Matches") 
 
--- Write a match to the containing file.
+getDeckFileHandle :: IO FilePath
+getDeckFileHandle  = do
+    dir <- getUserDocumentsDirectory
+    createDirectoryIfMissing False (dir </> "Legends-Tracker")
+    return (dir </> "Legends-Tracker/Decks")
+    
+-- Write a match to the tracking file.
 writeMatch  :: Match -> IO ()
 writeMatch m = do
-    file <- getFileHandle
-    appendFile file (intercalate " " (matchString m ++ ["\n"])) 
+    file <- getMatchFileHandle
+    appendFile file (matchString m)
 
+writeDeck  :: Deck -> IO ()
+writeDeck d = do
+    file <- getDeckFileHandle
+    appendFile file (deckString d)
+
+retrieveDeck  :: String -> [String]
+retrieveDeck s = do
+    file <- getDeckFileHandle
+    contents <- readFile file
+    let fileLines = lines contents
+    search fileLines s 1
+        
 allRates :: IO ()
 allRates  = do
     exists <- doesMatchesExist
-    file <- getFileHandle
+    file <- getMatchFileHandle
     content <- readFile file
     let fileLines = lines content
     if exists
@@ -47,7 +65,7 @@ allRates  = do
 rateByClass  :: Class -> IO ()
 rateByClass c = do
     exists <- doesMatchesExist
-    file <- getFileHandle
+    file <- getMatchFileHandle
     content <- readFile file
     let fileLines = lines content
     if exists
@@ -55,11 +73,10 @@ rateByClass c = do
         else print "No matches found."
 
 -- Get the rate of one class compared to a second.
--- TODO Figure out a way to avoid Infinity (1/0)
 rateByClassVClass        :: Class -> Class -> IO ()
 rateByClassVClass me them = do
     exists <- doesMatchesExist
-    file <- getFileHandle
+    file <- getMatchFileHandle
     content <- readFile file
     let fileLines = lines content
     if exists
@@ -70,7 +87,7 @@ rateByClassVClass me them = do
 resetTracking :: IO ()
 resetTracking  = do
     exists <- doesMatchesExist  
-    file <- getFileHandle
+    file <- getMatchFileHandle
     if exists
         then removeFile file
         else return ()
@@ -79,7 +96,7 @@ resetTracking  = do
 resetClass  :: Class -> IO ()
 resetClass c = do
     exists <- doesMatchesExist
-    file <- getFileHandle
+    file <- getMatchFileHandle
     contents <- readFile file
     let fileLines = lines contents
     if length contents >=0 && exists
