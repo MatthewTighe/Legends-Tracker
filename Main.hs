@@ -6,23 +6,29 @@ import System.Environment
 import Match
 import File
 
+-- Record a new match.
 addMatch     :: [String] -> IO ()
 addMatch args = do
     writeMatch $ buildMatch args
 
+-- Get win rates for a specific class.
 classRate arg = do
     rateByClass $ parseClass arg
 
+-- Get win rates for a specific class against a second specific class.
 classVClass args = do
    rateByClassVClass (parseClass $ args !! 0) (parseClass $ args !! 1)
 
+-- Get win rates for each class.
 allClassRates = do
    allRates 
 
+-- The entry point of the program.
 main = do
     args <- getArgs
     parse args
 
+-- Parse command line arguments.
 parse           :: [String] -> IO ()
 parse []         = showHelp
 parse (cmd:args) | cmd == "add" = addMatch args 
@@ -34,6 +40,7 @@ parse (cmd:args) | cmd == "add" = addMatch args
                  | cmd == "help" = showHelp
                  | otherwise = showHelp
 
+-- A verbose help message to assist users.
 helpMessage = [ "Usage: legends-tracker [commands ...]"
               , ""
               , "Commands:"
@@ -56,9 +63,7 @@ helpMessage = [ "Usage: legends-tracker [commands ...]"
               , "NOTE: add format should be <result> <your stuff> <opponent stuff>"
               ] 
 
+-- Print the help message.
 showHelp = do
     mapM_ putStrLn helpMessage
 
-test = do
-    args <- getLine
-    parse (words args)
