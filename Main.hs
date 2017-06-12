@@ -32,6 +32,7 @@ parse (cmd:args) | cmd == "add" = addMatch args
                  | cmd == "reset" = resetTracking
                  | cmd == "resetClass" = resetClass $ parseClass (args !! 0)
                  | cmd == "help" = showHelp
+                 | otherwise = showHelp
 
 helpMessage = [ "Usage: legends-tracker [commands ...]"
               , ""
