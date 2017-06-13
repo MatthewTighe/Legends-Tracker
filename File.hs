@@ -31,7 +31,7 @@ getFileHandle  = do
 writeMatch  :: Match -> IO ()
 writeMatch m = do
     file <- getFileHandle
-    appendFile file (intercalate " " (matchString m ++ ["\n"])) 
+    appendFile file (matchString m) 
 
 -- Get the win ratio for every class.
 allRates :: IO ()

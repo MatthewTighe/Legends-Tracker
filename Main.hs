@@ -1,27 +1,20 @@
 
 -- Required modules for argument parsing
 import System.Environment
+import Data.Char
 
 -- Local modules
 import Match
 import File
 
--- Record a new match.
-addMatch     :: [String] -> IO ()
-addMatch args = do
-    writeMatch $ buildMatch args
-
--- Get win rates for a specific class.
-classRate arg = do
-    rateByClass $ parseClass arg
+doClassRate arg = do rateByClass $ parseClass (map toLower arg) 
 
 -- Get win rates for a specific class against a second specific class.
-classVClass args = do
-   rateByClassVClass (parseClass $ args !! 0) (parseClass $ args !! 1)
+doClassVClass args = do rateByClassVClass 
+                            (parseClass $ args !! 0) 
+                            (parseClass $ args !! 1)
 
--- Get win rates for each class.
-allClassRates = do
-   allRates 
+doResetClass arg = do resetClass $ parseClass (map toLower arg)
 
 -- The entry point of the program.
 main = do
@@ -31,14 +24,17 @@ main = do
 -- Parse command line arguments.
 parse           :: [String] -> IO ()
 parse []         = showHelp
-parse (cmd:args) | cmd == "add" = addMatch args 
-                 | cmd == "class" = classRate (args !! 0) 
-                 | cmd == "vs" = classVClass args
-                 | cmd == "all" = allClassRates
+parse (cmd:args) | cmd == "add" = writeMatch $ buildMatch (toLower' args)
+                 | cmd == "class" = doClassRate (args !! 0) 
+                 | cmd == "vs" = doClassVClass (toLower' args)
+                 | cmd == "all" = allRates
                  | cmd == "reset" = resetTracking
-                 | cmd == "resetClass" = resetClass $ parseClass (args !! 0)
+                 | cmd == "resetClass" = doResetClass (args !! 0)
                  | cmd == "help" = showHelp
                  | otherwise = showHelp
+
+toLower'   :: [String] -> [String]
+toLower' ss = map (map toLower) ss
 
 -- A verbose help message to assist users.
 helpMessage = [ "Usage: legends-tracker [commands ...]"

@@ -1,7 +1,5 @@
 module Match where
 
-import qualified Data.Text as T
-
 data Match = Match {
                    result :: Result,
                    myArch :: Archetype,
@@ -15,13 +13,6 @@ data Result = Win
             | Loss
             | Draw
     deriving (Show, Eq)
-
--- TODO
--- not in use yet
-resultNum :: Match -> Int
-resultNum m | result m == Win  = 1
-            | result m == Loss = -1
-            | result m == Draw = 0
 
 -- The playable classes.
 data Class =  Archer 
@@ -42,7 +33,7 @@ data Class =  Archer
             | Neutral
             deriving (Show, Eq, Enum)
 
--- https://stackoverflow.com/questions/44420523/can-i-build-a-list-of-strings-using-each-constructor-of-a-class#44420810
+-- https://stackoverflow.com/questions/44420523/can-i-build-a-list-of-strings-using-each-constructor-of-a-class
 allClasses :: [String]
 allClasses  = fmap show $ enumFrom Archer
 
@@ -52,21 +43,11 @@ data Archetype =  Aggro
                 | Control
     deriving Show
 
--- TODO
--- not in use yet
-matchData :: Match -> (Int, [String]) 
-matchData m = (resultNum m,
-               [show (myArch m), show (myClass m),
-                show (theirArch m), show (theirClass m)]) 
-
 -- Convert a Match to a String.
-matchString :: Match -> [String]
-matchString m = [show (result m), show (myArch m), show (myClass m), 
-                      show (theirArch m), show (theirClass m)]
-
--- Parse a String to a Match.
-parseMatchInput :: String -> Match
-parseMatchInput s = buildMatch $ map T.unpack ((map T.toLower (map T.pack (words s))))
+matchString :: Match -> String
+matchString m = (show $ result m) ++ " " ++ 
+                (show $ myArch m) ++ " " ++ (show $ myClass m) ++ " " ++
+                (show $ theirArch m) ++ " " ++ (show $ theirClass m) ++ "\n"
 
 -- Build a Match from its component Strings.
 buildMatch :: [String] -> Match
